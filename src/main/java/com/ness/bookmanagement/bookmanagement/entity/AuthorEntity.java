@@ -30,6 +30,9 @@ public class AuthorEntity {
     @Column(length = 1000)
     private String biography;
 
-    @OneToMany(mappedBy = "authorEntity", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "authorEntity",
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
     private List<BookEntity> bookEntities;
 }

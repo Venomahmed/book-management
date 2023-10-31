@@ -29,7 +29,7 @@ public class BookEntity {
     @Column(length = 500)
     private String summary;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
     private AuthorEntity authorEntity;
 }
