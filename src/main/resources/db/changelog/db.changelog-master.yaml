@@ -1,9 +1,18 @@
 databaseChangeLog:
   - changeSet:
       id: 1
-      author: user1
+      author: steve
       changes:
         - sqlFile:
             path: 2023_11_01_12_00_00_create_stmts.sql
             relativeToChangelogFile: true
+
+  - changeSet:
+      id: 2
+      author: mark
+      changes:
+        - sqlFile:
+            path: 2023_11_02_12_00_00_create_stmts.sql
+            relativeToChangelogFile: true
+
 

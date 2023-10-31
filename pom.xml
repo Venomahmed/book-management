@@ -54,25 +54,13 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
-            <!--				<scope>provided</scope>-->
         </dependency>
 
-
-<!--        <dependency>-->
-<!--            <groupId>io.springfox</groupId>-->
-<!--            <artifactId>springfox-boot-starter</artifactId>-->
-<!--            <version>3.0.0</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>io.springfox</groupId>-->
-<!--            <artifactId>springfox-swagger2</artifactId>-->
-<!--            <version>3.0.0</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>io.springfox</groupId>-->
-<!--            <artifactId>springfox-swagger-ui</artifactId>-->
-<!--            <version>3.0.0</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -82,41 +70,17 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>3.10.3</version>
+                <configuration>
+                    <propertyFile>${basedir}/src/main/resources/application.yml</propertyFile>
+                    <changeLogFile>${basedir}/src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
+                </configuration>
+            </plugin>
 
-<!--            <plugin>-->
-<!--                <groupId>com.github.kongchen</groupId>-->
-<!--                <artifactId>swagger-maven-plugin</artifactId>-->
-<!--                <version>3.1.0</version> &lt;!&ndash; Use the latest version &ndash;&gt;-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>compile</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>generate</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--                <configuration>-->
-<!--                    <apiSources>-->
-<!--                        <apiSource>-->
-<!--                            <springmvc>true</springmvc>-->
-<!--                            <locations>com.ness.bookmanagement.bookmanagement.controller</locations>-->
-<!--                            <schemes>http,https</schemes>-->
-<!--                            <basePath>/api</basePath>-->
-<!--&lt;!&ndash;                            <outputPath>${project.build.directory}/generated/swagger-ui</outputPath>&ndash;&gt;-->
-<!--                            &lt;!&ndash; Specify the output file name and format (YAML or JSON) &ndash;&gt;-->
-<!--                            <swaggerDirectory>${basedir}/generated/swagger-ui</swaggerDirectory>-->
-<!--                            <info>-->
-<!--                                <title>Your API Documentation</title>-->
-<!--                                <version>1.0</version>-->
-<!--                                <description>Description of your API</description>-->
-<!--                                <termsOfService>Terms of service</termsOfService>-->
-<!--&lt;!&ndash;                                <license>License</license>&ndash;&gt;-->
-<!--&lt;!&ndash;                                <licenseUrl>http://www.example.com/license</licenseUrl>&ndash;&gt;-->
-<!--                            </info>-->
-<!--                        </apiSource>-->
-<!--                    </apiSources>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+
         </plugins>
     </build>
 
