@@ -12,7 +12,7 @@ databaseChangeLog:
       author: mark
       changes:
         - sqlFile:
-            path: 2023_11_02_12_00_00_create_stmts.sql
+            path: 2023_11_02_12_00_00_alter_stmts.sql
             relativeToChangelogFile: true
 
 
