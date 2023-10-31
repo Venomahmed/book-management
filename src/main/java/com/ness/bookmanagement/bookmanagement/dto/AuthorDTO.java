@@ -1,5 +1,6 @@
 package com.ness.bookmanagement.bookmanagement.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ness.bookmanagement.bookmanagement.entity.AuthorEntity;
 import lombok.*;
 
@@ -14,6 +15,8 @@ public class AuthorDTO {
     private Long id;
     private String firstName;
     private String lastName;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
     private String biography;
 
