@@ -4,6 +4,6 @@ databaseChangeLog:
       author: user1
       changes:
         - sqlFile:
-            path: 2023-11-01-12:00:00.sql
+            path: 2023_11_01_12_00_00_create_stmts.sql
             relativeToChangelogFile: true
 
