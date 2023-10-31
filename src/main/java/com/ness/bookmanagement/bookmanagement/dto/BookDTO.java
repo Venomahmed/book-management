@@ -1,12 +1,14 @@
 package com.ness.bookmanagement.bookmanagement.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ness.bookmanagement.bookmanagement.entity.BookEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder
@@ -14,9 +16,11 @@ public class BookDTO {
     private Long id;
     private String title;
     private String isbn;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate publicationDate;
     private String summary;
-    private AuthorDTO authorDTO;
+    private Long authorId;
 
 
     public static BookDTO buildDTO(BookEntity bookEntity) {
@@ -26,7 +30,7 @@ public class BookDTO {
                 .isbn(bookEntity.getIsbn())
                 .publicationDate(bookEntity.getPublicationDate())
                 .summary(bookEntity.getSummary())
-                .authorDTO(AuthorDTO.buildDTO(bookEntity.getAuthorEntity()))
+                .authorId(bookEntity.getAuthorEntity().getId())
                 .build();
 
     }
@@ -38,7 +42,6 @@ public class BookDTO {
                 .isbn(this.isbn)
                 .publicationDate(this.publicationDate)
                 .summary(this.summary)
-                .authorEntity(this.authorDTO.buildAuthorEntity())
                 .build();
 
     }

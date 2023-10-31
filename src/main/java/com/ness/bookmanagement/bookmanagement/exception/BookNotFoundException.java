@@ -2,7 +2,7 @@ package com.ness.bookmanagement.bookmanagement.exception;
 
 import com.ness.bookmanagement.bookmanagement.constant.ErrorCodes;
 
-public class BookNotFoundException extends BookManagementException {
+public class BookNotFoundException extends NotFoundException {
     public BookNotFoundException() {
         super();
     }
