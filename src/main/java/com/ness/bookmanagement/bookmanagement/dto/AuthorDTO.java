@@ -1,6 +1,6 @@
 package com.ness.bookmanagement.bookmanagement.dto;
 
-import com.ness.bookmanagement.bookmanagement.entity.Author;
+import com.ness.bookmanagement.bookmanagement.entity.AuthorEntity;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -18,16 +18,27 @@ public class AuthorDTO {
     private String biography;
 
     /**
-     * @param author
+     * @param authorEntity
      * @return
      */
-    public static AuthorDTO buildDTO(Author author) {
+    public static AuthorDTO buildDTO(AuthorEntity authorEntity) {
         return AuthorDTO.builder()
-                .id(author.getId())
-                .firstName(author.getFirstName())
-                .lastName(author.getLastName())
-                .dateOfBirth(author.getDateOfBirth())
-                .biography(author.getBiography())
+                .id(authorEntity.getId())
+                .firstName(authorEntity.getFirstName())
+                .lastName(authorEntity.getLastName())
+                .dateOfBirth(authorEntity.getDateOfBirth())
+                .biography(authorEntity.getBiography())
                 .build();
+    }
+
+    public AuthorEntity buildAuthorEntity() {
+        return AuthorEntity.builder()
+                .id(this.id)
+                .firstName(this.firstName)
+                .lastName(this.lastName)
+                .dateOfBirth(this.dateOfBirth)
+                .biography(this.biography)
+                .build();
+
     }
 }

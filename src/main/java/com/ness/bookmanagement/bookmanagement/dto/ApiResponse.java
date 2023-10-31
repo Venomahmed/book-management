@@ -2,9 +2,13 @@ package com.ness.bookmanagement.bookmanagement.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class ApiResponse {
-    private Object data;
+public class ApiResponse<T> {
+    private T data;
+
+
 }

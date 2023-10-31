@@ -1,6 +1,6 @@
 package com.ness.bookmanagement.bookmanagement.dto;
 
-import com.ness.bookmanagement.bookmanagement.entity.Book;
+import com.ness.bookmanagement.bookmanagement.entity.BookEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,21 +16,29 @@ public class BookDTO {
     private String isbn;
     private LocalDate publicationDate;
     private String summary;
-    
-    // You can also include author information here as a simplified representation
-    private AuthorDTO author;
+    private AuthorDTO authorDTO;
 
 
-
-    // Helper method to convert Book to BookDTO
-    public static BookDTO buildDTO(Book book) {
+    public static BookDTO buildDTO(BookEntity bookEntity) {
         return BookDTO.builder()
-                .id(book.getId())
-                .title(book.getTitle())
-                .isbn(book.getIsbn())
-                .publicationDate(book.getPublicationDate())
-                .summary(book.getSummary())
-                .author(AuthorDTO.buildDTO(book.getAuthor()))
+                .id(bookEntity.getId())
+                .title(bookEntity.getTitle())
+                .isbn(bookEntity.getIsbn())
+                .publicationDate(bookEntity.getPublicationDate())
+                .summary(bookEntity.getSummary())
+                .authorDTO(AuthorDTO.buildDTO(bookEntity.getAuthorEntity()))
+                .build();
+
+    }
+
+    public BookEntity buildBookEntity() {
+        return BookEntity.builder()
+                .id(this.id)
+                .title(this.title)
+                .isbn(this.isbn)
+                .publicationDate(this.publicationDate)
+                .summary(this.summary)
+                .authorEntity(this.authorDTO.buildAuthorEntity())
                 .build();
 
     }

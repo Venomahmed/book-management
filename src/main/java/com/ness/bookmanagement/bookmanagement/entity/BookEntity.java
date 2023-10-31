@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,16 +11,19 @@ import java.util.Date;
 @Setter
 @Builder
 @Entity
-public class Book {
+@Table(name = "book")
+public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String title;
 
     @Column(unique = true)
     private String isbn;
 
+    @Column(name = "publication_date", unique = true)
     private LocalDate publicationDate;
 
     @Column(length = 500)
@@ -29,5 +31,5 @@ public class Book {
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private Author author;
+    private AuthorEntity authorEntity;
 }
