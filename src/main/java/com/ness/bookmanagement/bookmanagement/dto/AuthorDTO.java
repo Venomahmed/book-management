@@ -1,16 +1,14 @@
 package com.ness.bookmanagement.bookmanagement.dto;
 
 import com.ness.bookmanagement.bookmanagement.entity.Author;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class AuthorDTO {
     private Long id;
