@@ -51,14 +51,6 @@ class AuthorIntegrationTests {
         authorDTO.setLastName("Doe");
         authorDTO.setBiography("Author biography");
 
-        BookDTO bookDTO = BookDTO.builder()
-                .title("HelloWorld")
-                .isbn("978-3-16-148410-0")
-                .publicationDate(LocalDate.now())
-                .summary("summary as hello world")
-                .authorDTO(authorDTO)
-                .build();
-
         String requestPayload = objectMapper.writeValueAsString(authorDTO);
 
         mockMvc.perform(MockMvcRequestBuilders
