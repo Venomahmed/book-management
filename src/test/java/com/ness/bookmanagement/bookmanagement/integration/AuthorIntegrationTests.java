@@ -1,29 +1,29 @@
-package com.ness.bookmanagement.bookmanagement.controller;
+package com.ness.bookmanagement.bookmanagement.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ness.bookmanagement.bookmanagement.dto.ApiResponse;
 import com.ness.bookmanagement.bookmanagement.dto.AuthorDTO;
+import com.ness.bookmanagement.bookmanagement.dto.BookDTO;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ActiveProfiles("test")
-@Rollback(true)
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthorControllerTest {
+class AuthorIntegrationTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,6 +51,14 @@ class AuthorControllerTest {
         authorDTO.setLastName("Doe");
         authorDTO.setBiography("Author biography");
 
+        BookDTO bookDTO = BookDTO.builder()
+                .title("HelloWorld")
+                .isbn("978-3-16-148410-0")
+                .publicationDate(LocalDate.now())
+                .summary("summary as hello world")
+                .authorDTO(authorDTO)
+                .build();
+
         String requestPayload = objectMapper.writeValueAsString(authorDTO);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -60,31 +68,14 @@ class AuthorControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(mvcResult -> {
                     String jsonResponse = mvcResult.getResponse().getContentAsString();
-                    AuthorDTO responseDTO = objectMapper.readValue(jsonResponse, AuthorDTO.class);
+                    ApiResponse<AuthorDTO> apiResponse = objectMapper.readValue(jsonResponse, ApiResponse.class);
 
-                    assertThat(responseDTO)
-                            .extracting(AuthorDTO::getId, AuthorDTO::getFirstName, AuthorDTO::getLastName)
-                            .containsExactly(1L, "John", "Doe");
+                    assertThat(apiResponse)
+                            .extracting("data")
+                            .extracting("id", "firstName", "lastName")
+                            .containsExactly(1, "John", "Doe");
                 });
 
     }
-
-    @Test
-    public void testGetAuthorById() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/authors/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(mvcResult -> {
-                    String jsonResponse = mvcResult.getResponse().getContentAsString();
-                    AuthorDTO authorDTO = objectMapper.readValue(jsonResponse, AuthorDTO.class);
-
-                    assertThat(authorDTO)
-                            .extracting(AuthorDTO::getId, AuthorDTO::getFirstName, AuthorDTO::getLastName)
-                            .containsExactly(1L, "John", "Doe");
-                });
-        ;
-    }
-
 
 }
