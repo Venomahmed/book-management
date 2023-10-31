@@ -1,6 +1,6 @@
 # Technical Task: Book Management System
 
-Objective: Design and implement a robust RESTful API that manages books and their authors.
+Objective: Design and implement a robust RESTful API that manages bookEntities and their authorEntities.
 
 ## <u>Requirements:</u>
 * Project Setup:
@@ -25,10 +25,10 @@ Objective: Design and implement a robust RESTful API that manages books and thei
 * API Endpoints:
   * Author:
   * CRUD operations
-  * Retrieve books by an author
+  * Retrieve bookEntities by an authorEntity
   * Book:
   * CRUD operations
-  * Search books by title or author name
+  * Search bookEntities by title or authorEntity name
 * Database:
     * Use an in-memory H2 database.
     * Write Liquibase changelogs for creating the necessary tables and relationships.
@@ -39,8 +39,8 @@ Objective: Design and implement a robust RESTful API that manages books and thei
     * Return detailed error responses with appropriate HTTP status codes.
 * Validation:
     * Validate ISBN format.
-    * Ensure that the author's date of birth is in the past.
-    * Ensure that the book's publication date is not in the future.
+    * Ensure that the authorEntity's date of birth is in the past.
+    * Ensure that the bookEntity's publication date is not in the future.
     * Validate input lengths for biography and summary.
 * Security:
     * Secure the API using JWT authentication.
@@ -65,8 +65,8 @@ Objective: Design and implement a robust RESTful API that manages books and thei
     * JPA annotations are correctly used for primary keys, relationships, and constraints.
 * API Endpoints:
     * CRUD operations for both Author and Book are implemented and exposed.
-    * The endpoint to retrieve books by an author is functional.
-    * The search endpoint filters books based on title or author name.
+    * The endpoint to retrieve bookEntities by an authorEntity is functional.
+    * The search endpoint filters bookEntities based on title or authorEntity name.
 * Database:
     * The H2 database is correctly integrated and functional.
     * Liquibase changelogs are present and correctly define the necessary tables and relationships.

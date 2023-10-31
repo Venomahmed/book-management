@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ness.bookmanagement</groupId>
-    <artifactId>book-management</artifactId>
+    <artifactId>bookEntity-management</artifactId>
     <version>v1.0.0</version>
-    <name>book-management</name>
+    <name>bookEntity-management</name>
     <description>Ness Book Management Assignment</description>
     <properties>
         <java.version>11</java.version>

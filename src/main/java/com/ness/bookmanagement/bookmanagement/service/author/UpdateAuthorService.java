@@ -1,28 +1,28 @@
 package com.ness.bookmanagement.bookmanagement.service.author;
 
 import com.ness.bookmanagement.bookmanagement.dto.AuthorDTO;
-import com.ness.bookmanagement.bookmanagement.entity.Author;
+import com.ness.bookmanagement.bookmanagement.entity.AuthorEntity;
 import com.ness.bookmanagement.bookmanagement.exception.AuthorNotFoundException;
-import com.ness.bookmanagement.bookmanagement.respository.AuthorRepository;
+import com.ness.bookmanagement.bookmanagement.respository.AuthorEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UpdateAuthorService {
     @Autowired
-    private AuthorRepository authorRepository;
+    private AuthorEntityRepository authorEntityRepository;
 
     public AuthorDTO updateAuthor(Long id, AuthorDTO updatedAuthorDTO) {
-        Author author = authorRepository.findById(id)
+        AuthorEntity authorEntity = authorEntityRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("author not found (" + id + ")"));
 
-        author.setFirstName(updatedAuthorDTO.getFirstName());
-        author.setLastName(updatedAuthorDTO.getLastName());
-        author.setDateOfBirth(updatedAuthorDTO.getDateOfBirth());
-        author.setBiography(updatedAuthorDTO.getBiography());
+        authorEntity.setFirstName(updatedAuthorDTO.getFirstName());
+        authorEntity.setLastName(updatedAuthorDTO.getLastName());
+        authorEntity.setDateOfBirth(updatedAuthorDTO.getDateOfBirth());
+        authorEntity.setBiography(updatedAuthorDTO.getBiography());
 
-        author = authorRepository.save(author);
+        authorEntity = authorEntityRepository.save(authorEntity);
 
-        return AuthorDTO.buildDTO(author);
+        return AuthorDTO.buildDTO(authorEntity);
     }
 }
