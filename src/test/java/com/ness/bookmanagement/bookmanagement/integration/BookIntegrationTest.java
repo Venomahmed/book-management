@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class BookIntegrationTest {
+    private static final String BOOK_URL = "/v1/books";
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -44,7 +45,7 @@ public class BookIntegrationTest {
 
         String payload = objectMapper.writeValueAsString(bookDTO);
 
-        String bookResponseAsString = mockMvc.perform(post("/books")
+        String bookResponseAsString = mockMvc.perform(post(BOOK_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(payload))
                 .andExpect(status().isCreated())
@@ -58,7 +59,7 @@ public class BookIntegrationTest {
 
         Integer newBookId = JsonPath.read(bookResponseAsString, "$.data.id");
 
-        mockMvc.perform(get("/books/{id}", newBookId))
+        mockMvc.perform(get(BOOK_URL + "/{id}", newBookId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(newBookId))
                 .andExpect(jsonPath("$.data.title").value(bookDTO.getTitle()))
@@ -81,7 +82,7 @@ public class BookIntegrationTest {
 
         String updatePayload = objectMapper.writeValueAsString(bookDTO);
 
-        mockMvc.perform(put("/books/{id}", bookId)
+        mockMvc.perform(put(BOOK_URL + "/{id}", bookId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatePayload))
                 .andExpect(status().isOk())
@@ -89,10 +90,10 @@ public class BookIntegrationTest {
                 .andExpect(jsonPath("$.data.isbn").value(bookDTO.getIsbn()))
                 .andExpect(jsonPath("$.data.publicationDate").value(bookDTO.getPublicationDate().toString()));
 
-        mockMvc.perform(delete("/books/{id}", bookId))
+        mockMvc.perform(delete(BOOK_URL + "/{id}", bookId))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/books/{id}", bookId))
+        mockMvc.perform(get(BOOK_URL + "/{id}", bookId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Book not found with ID: " + bookId));
     }
@@ -123,7 +124,7 @@ public class BookIntegrationTest {
 
 
         // WHEN & THEN
-        mockMvc.perform(get("/books/by-author")
+        mockMvc.perform(get(BOOK_URL + "/by-author")
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -141,7 +142,7 @@ public class BookIntegrationTest {
                 .andExpect(jsonPath("$.data[1].authorId").value(authorId));
 
 
-        mockMvc.perform(get("/books/by-author")
+        mockMvc.perform(get(BOOK_URL + "/by-author")
                         .param("firstName", firstName.toLowerCase())
                         .param("lastName", "")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -151,7 +152,7 @@ public class BookIntegrationTest {
                 .andExpect(jsonPath("$.data[0].isbn").value(bookDTO.getIsbn()))
                 .andExpect(jsonPath("$.data[0].publicationDate").value(bookDTO.getPublicationDate().toString()));
 
-        mockMvc.perform(get("/books/by-author")
+        mockMvc.perform(get(BOOK_URL + "/by-author")
                         .param("firstName", "")
                         .param("lastName", lastName)
                         .contentType(MediaType.APPLICATION_JSON))
