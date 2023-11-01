@@ -5,7 +5,6 @@ import com.ness.bookmanagement.bookmanagement.dto.BookDTO;
 import com.ness.bookmanagement.bookmanagement.entity.AuthorEntity;
 import com.ness.bookmanagement.bookmanagement.entity.BookEntity;
 import com.ness.bookmanagement.bookmanagement.exception.ActionFailedException;
-import com.ness.bookmanagement.bookmanagement.exception.NotFoundException;
 import com.ness.bookmanagement.bookmanagement.respository.AuthorEntityRepository;
 import com.ness.bookmanagement.bookmanagement.respository.BookEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,7 @@ class CreateBookService {
 
         try {
             BookEntity bookEntity = bookDTO.buildBookEntity();
+            bookEntity.setId(null);
             bookEntity.setAuthorEntity(authorEntity);
 
             BookEntity savedBookEntity = bookEntityRepository.save(bookEntity);

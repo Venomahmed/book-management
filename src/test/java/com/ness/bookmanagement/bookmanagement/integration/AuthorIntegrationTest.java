@@ -3,7 +3,6 @@ package com.ness.bookmanagement.bookmanagement.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.ness.bookmanagement.bookmanagement.dto.AuthorDTO;
-import com.ness.bookmanagement.bookmanagement.dto.BookDTO;
 import com.ness.bookmanagement.bookmanagement.service.author.AuthorService;
 import com.ness.bookmanagement.bookmanagement.service.book.BookService;
 import org.junit.jupiter.api.Test;
@@ -32,137 +31,98 @@ public class AuthorIntegrationTest {
     private BookService bookService;
 
     @Test
-    public void givenAuthorDTO_thenVerifyCreateAndGetEndpoint() throws Exception {
-        AuthorDTO authorDTO = AuthorDTO.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .biography("Author biography")
-                .dateOfBirth(LocalDate.now())
+    public void testCreateAuthor_andGetAuthorById() throws Exception {
+        // GIVEN
+        final AuthorDTO authorDTO = AuthorDTO.builder()
+                .firstName("Emily")
+                .lastName("Johnson")
+                .biography("Award-winning novelist and essayist.")
+                .dateOfBirth(LocalDate.parse("1985-08-22"))
                 .build();
 
-        String payload = objectMapper.writeValueAsString(authorDTO);
+        final String payload = objectMapper.writeValueAsString(authorDTO);
 
-        String authorResponseAsString = mockMvc.perform(post("/authors")
+        // WHEN & THEN
+        final String authorResponseAsString = mockMvc.perform(post("/authors")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(payload))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").isNotEmpty())
-                .andExpect(jsonPath("$.data.firstName").value("John"))
-                .andExpect(jsonPath("$.data.lastName").value("Doe"))
-                .andExpect(jsonPath("$.data.biography").value("Author biography"))
-                .andExpect(jsonPath("$.data.dateOfBirth").value(LocalDate.now().toString()))
+                .andExpect(jsonPath("$.data.firstName").value(authorDTO.getFirstName()))
+                .andExpect(jsonPath("$.data.lastName").value(authorDTO.getLastName()))
+                .andExpect(jsonPath("$.data.biography").value(authorDTO.getBiography()))
+                .andExpect(jsonPath("$.data.dateOfBirth").value(authorDTO.getDateOfBirth().toString()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
-        Integer newAuthorId = JsonPath.read(authorResponseAsString, "$.data.id");
+        final Integer newAuthorId = JsonPath.read(authorResponseAsString, "$.data.id");
 
         mockMvc.perform(get("/authors/{id}", newAuthorId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(newAuthorId))
-                .andExpect(jsonPath("$.data.firstName").value("John"))
-                .andExpect(jsonPath("$.data.lastName").value("Doe"))
-                .andExpect(jsonPath("$.data.biography").value("Author biography"))
-                .andExpect(jsonPath("$.data.dateOfBirth").value(LocalDate.now().toString()));
+                .andExpect(jsonPath("$.data.firstName").value(authorDTO.getFirstName()))
+                .andExpect(jsonPath("$.data.lastName").value(authorDTO.getLastName()))
+                .andExpect(jsonPath("$.data.biography").value(authorDTO.getBiography()))
+                .andExpect(jsonPath("$.data.dateOfBirth").value(authorDTO.getDateOfBirth().toString()));
     }
 
     @Test
-    public void givenAuthorDTO_thenAssertUpdateAndDeleteEndpoint() throws Exception {
+    public void testUpdatedAuthor_andDeleteById() throws Exception {
+        // GIVEN
+        final Long authorId = 4L;
+
         AuthorDTO authorDTO = AuthorDTO.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .biography("Author biography")
-                .dateOfBirth(LocalDate.now())
+                .firstName("Sophia Updated")
+                .lastName("Lee Updated")
+                .biography("An award-winning author famous for historical fiction. Updated")
+                .dateOfBirth(LocalDate.parse("1988-11-30"))
                 .build();
 
-        String createPayload = objectMapper.writeValueAsString(authorDTO);
+        String updatePayload = objectMapper.writeValueAsString(authorDTO);
 
-        String authorResponseAsString = mockMvc.perform(post("/authors")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(createPayload))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.id").isNotEmpty())
-                .andExpect(jsonPath("$.data.firstName").value("John"))
-                .andExpect(jsonPath("$.data.lastName").value("Doe"))
-                .andExpect(jsonPath("$.data.biography").value("Author biography"))
-                .andExpect(jsonPath("$.data.dateOfBirth").value(LocalDate.now().toString()))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
 
-        Integer newAuthorId = JsonPath.read(authorResponseAsString, "$.data.id");
-
-        AuthorDTO updateAuthorDTO = AuthorDTO.builder()
-                .firstName("John Updated")
-                .lastName("Doe Updated")
-                .biography("Author biography Updated")
-                .dateOfBirth(LocalDate.now())
-                .build();
-        String updatePayload = objectMapper.writeValueAsString(updateAuthorDTO);
-
-        mockMvc.perform(put("/authors/{id}", newAuthorId)
+        // WHEN & THEN
+        mockMvc.perform(put("/authors/{id}", authorId)
                         .content(updatePayload)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value(newAuthorId))
-                .andExpect(jsonPath("$.data.firstName").value(updateAuthorDTO.getFirstName()))
-                .andExpect(jsonPath("$.data.lastName").value(updateAuthorDTO.getLastName()))
-                .andExpect(jsonPath("$.data.biography").value(updateAuthorDTO.getBiography()))
-                .andExpect(jsonPath("$.data.dateOfBirth").value(updateAuthorDTO.getDateOfBirth().toString()));
+                .andExpect(jsonPath("$.data.id").value(authorId))
+                .andExpect(jsonPath("$.data.firstName").value(authorDTO.getFirstName()))
+                .andExpect(jsonPath("$.data.lastName").value(authorDTO.getLastName()))
+                .andExpect(jsonPath("$.data.biography").value(authorDTO.getBiography()))
+                .andExpect(jsonPath("$.data.dateOfBirth").value(authorDTO.getDateOfBirth().toString()));
 
-        mockMvc.perform(delete("/authors/{id}", newAuthorId))
+        mockMvc.perform(delete("/authors/{id}", authorId))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/authors/{id}", newAuthorId))
+        mockMvc.perform(get("/authors/{id}", authorId))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Author not found with ID: " + newAuthorId));
+                .andExpect(jsonPath("$.message").value("Author not found with ID: " + authorId));
     }
 
 
     @Test
     public void testGetBooksByAuthor_givenListOfBooks_thenAssertResponse() throws Exception {
         // GIVEN
-        AuthorDTO authorDTO = AuthorDTO.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .biography("Author biography")
-                .dateOfBirth(LocalDate.now())
-                .build();
-        AuthorDTO createdAuthor = authorService.createAuthor(authorDTO);
-
-        BookDTO bookDTO1 = BookDTO.builder()
-                .title("Sample Book")
-                .isbn("4444444444")
-                .publicationDate(LocalDate.now())
-                .summary("This is a sample book.")
-                .authorId(createdAuthor.getId())
-                .build();
-
-        BookDTO bookDTO2 = BookDTO.builder()
-                .title("Sample Book 2")
-                .isbn("5555555555")
-                .publicationDate(LocalDate.now())
-                .summary("This is a sample book 2.")
-                .authorId(createdAuthor.getId())
-                .build();
-
-        bookService.createBook(bookDTO1);
-        bookService.createBook(bookDTO2);
+        final Long authorId = 2L;
 
         // WHEN & THEN
-        mockMvc.perform(get("/authors/" + createdAuthor.getId() + "/books")
+        mockMvc.perform(get("/authors/" + authorId + "/books")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].id").isNotEmpty())
-                .andExpect(jsonPath("$.data[0].title").value(bookDTO1.getTitle()))
-                .andExpect(jsonPath("$.data[0].isbn").value(bookDTO1.getIsbn()))
-                .andExpect(jsonPath("$.data[0].publicationDate").value(bookDTO1.getPublicationDate().toString()))
-                .andExpect(jsonPath("$.data[0].summary").value(bookDTO1.getSummary()))
+                .andExpect(jsonPath("$.data[0].id").value(2))
+                .andExpect(jsonPath("$.data[0].title").value("Love in Paris"))
+                .andExpect(jsonPath("$.data[0].isbn").value("978-0062407689"))
+                .andExpect(jsonPath("$.data[0].publicationDate").value("2021-07-20"))
+                .andExpect(jsonPath("$.data[0].summary").value("A heartwarming love story set in the city of love."))
+                .andExpect(jsonPath("$.data[0].authorId").value(authorId))
 
-                .andExpect(jsonPath("$.data[1].id").isNotEmpty())
-                .andExpect(jsonPath("$.data[1].title").value(bookDTO2.getTitle()))
-                .andExpect(jsonPath("$.data[1].isbn").value(bookDTO2.getIsbn()))
-                .andExpect(jsonPath("$.data[1].publicationDate").value(bookDTO2.getPublicationDate().toString()))
-                .andExpect(jsonPath("$.data[1].summary").value(bookDTO2.getSummary()));
+                .andExpect(jsonPath("$.data[1].id").value(6))
+                .andExpect(jsonPath("$.data[1].title").value("Summer Love"))
+                .andExpect(jsonPath("$.data[1].isbn").value("978-0345547976"))
+                .andExpect(jsonPath("$.data[1].publicationDate").value("2019-06-30"))
+                .andExpect(jsonPath("$.data[1].summary").value("A delightful summer romance that warms your heart."))
+                .andExpect(jsonPath("$.data[1].authorId").value(authorId));
     }
 }

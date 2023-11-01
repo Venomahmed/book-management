@@ -2,6 +2,8 @@ package com.ness.bookmanagement.bookmanagement.service.book;
 
 import com.ness.bookmanagement.bookmanagement.dto.BookDTO;
 
+import java.util.List;
+
 /**
  *
  */
@@ -14,10 +16,21 @@ public interface BookService {
     BookDTO createBook(BookDTO bookDTO);
 
     /**
+     * @return
+     */
+    List<BookDTO> getAllBooks();
+
+    /**
      * @param id
      * @return
      */
     BookDTO getBook(Long id);
+
+    /**
+     * @param isbn
+     * @return
+     */
+    BookDTO getBookByIsbn(String isbn);
 
     /**
      * @param id
@@ -30,4 +43,11 @@ public interface BookService {
      * @param id
      */
     void deleteBook(Long id);
+
+    /**
+     * @param firstName
+     * @param lastName
+     * @return
+     */
+    List<BookDTO> getBooksByAuthorName(String firstName, String lastName);
 }
