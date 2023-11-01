@@ -9,6 +9,4 @@ import lombok.NoArgsConstructor;
 @Data
 public class ApiResponse<T> {
     private T data;
-
-
 }

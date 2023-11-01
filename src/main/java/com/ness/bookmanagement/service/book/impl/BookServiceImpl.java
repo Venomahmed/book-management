@@ -1,6 +1,7 @@
 package com.ness.bookmanagement.service.book.impl;
 
 import com.ness.bookmanagement.dto.BookDTO;
+import com.ness.bookmanagement.dto.BookFilterDTO;
 import com.ness.bookmanagement.service.book.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,7 @@ class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDTO> getBooksByAuthorName(String firstName, String lastName) {
-        return getBookService.getBooksByAuthorName(firstName, lastName);
+    public List<BookDTO> filterBooks(BookFilterDTO bookFilterDTO) {
+        return getBookService.filterBooks(bookFilterDTO);
     }
 }

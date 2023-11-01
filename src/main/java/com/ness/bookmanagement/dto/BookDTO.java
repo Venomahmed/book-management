@@ -31,7 +31,6 @@ public class BookDTO {
                 .summary(bookEntity.getSummary())
                 .authorId(bookEntity.getAuthorEntity().getId())
                 .build();
-
     }
 
     public BookEntity buildBookEntity() {
