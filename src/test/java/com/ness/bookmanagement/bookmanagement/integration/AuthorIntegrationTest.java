@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AuthorIntegrationTest {
+    private static final String AUTHOR_URL = "/v1/authors";
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -43,7 +44,7 @@ public class AuthorIntegrationTest {
         final String payload = objectMapper.writeValueAsString(authorDTO);
 
         // WHEN & THEN
-        final String authorResponseAsString = mockMvc.perform(post("/authors")
+        final String authorResponseAsString = mockMvc.perform(post(AUTHOR_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(payload))
                 .andExpect(status().isCreated())
@@ -58,7 +59,7 @@ public class AuthorIntegrationTest {
 
         final Integer newAuthorId = JsonPath.read(authorResponseAsString, "$.data.id");
 
-        mockMvc.perform(get("/authors/{id}", newAuthorId))
+        mockMvc.perform(get(AUTHOR_URL + "/{id}", newAuthorId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(newAuthorId))
                 .andExpect(jsonPath("$.data.firstName").value(authorDTO.getFirstName()))
@@ -83,7 +84,7 @@ public class AuthorIntegrationTest {
 
 
         // WHEN & THEN
-        mockMvc.perform(put("/authors/{id}", authorId)
+        mockMvc.perform(put(AUTHOR_URL+"/{id}", authorId)
                         .content(updatePayload)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -93,10 +94,10 @@ public class AuthorIntegrationTest {
                 .andExpect(jsonPath("$.data.biography").value(authorDTO.getBiography()))
                 .andExpect(jsonPath("$.data.dateOfBirth").value(authorDTO.getDateOfBirth().toString()));
 
-        mockMvc.perform(delete("/authors/{id}", authorId))
+        mockMvc.perform(delete(AUTHOR_URL + "/{id}", authorId))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/authors/{id}", authorId))
+        mockMvc.perform(get(AUTHOR_URL + "/{id}", authorId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Author not found with ID: " + authorId));
     }
@@ -108,7 +109,7 @@ public class AuthorIntegrationTest {
         final Long authorId = 2L;
 
         // WHEN & THEN
-        mockMvc.perform(get("/authors/" + authorId + "/books")
+        mockMvc.perform(get(AUTHOR_URL + "/" + authorId + "/books")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].id").value(2))
