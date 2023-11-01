@@ -1,8 +1,9 @@
-package com.ness.bookmanagement.bookmanagement.service.author;
+package com.ness.bookmanagement.bookmanagement.service.author.impl;
 
+import com.ness.bookmanagement.bookmanagement.constant.ErrorCodes;
 import com.ness.bookmanagement.bookmanagement.dto.AuthorDTO;
 import com.ness.bookmanagement.bookmanagement.entity.AuthorEntity;
-import com.ness.bookmanagement.bookmanagement.exception.AuthorNotFoundException;
+import com.ness.bookmanagement.bookmanagement.exception.NotFoundException;
 import com.ness.bookmanagement.bookmanagement.respository.AuthorEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +11,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ness.bookmanagement.bookmanagement.service.author.AuthorUtil.authorNotFoundException;
+
 @Service
-public class GetAuthorService {
+class GetAuthorService {
+    private final AuthorEntityRepository authorEntityRepository;
+
     @Autowired
-    private AuthorEntityRepository authorEntityRepository;
+    GetAuthorService(AuthorEntityRepository authorEntityRepository) {
+        this.authorEntityRepository = authorEntityRepository;
+    }
 
     public List<AuthorDTO> getAllAuthors() {
         List<AuthorEntity> authorEntities = authorEntityRepository.findAll();
@@ -25,7 +32,7 @@ public class GetAuthorService {
 
     public AuthorDTO getAuthorById(Long id) {
         AuthorEntity authorEntity = authorEntityRepository.findById(id)
-                .orElseThrow(() -> new AuthorNotFoundException("author not found (" + id + ")"));
+                .orElseThrow(authorNotFoundException(id));
         return AuthorDTO.buildDTO(authorEntity);
     }
 
