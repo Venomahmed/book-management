@@ -2,6 +2,7 @@ package com.ness.bookmanagement.controller;
 
 import com.ness.bookmanagement.dto.ApiResponse;
 import com.ness.bookmanagement.dto.BookDTO;
+import com.ness.bookmanagement.dto.BookFilterDTO;
 import com.ness.bookmanagement.service.book.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Api(tags = "Book Controller")
 @RestController
@@ -54,11 +56,19 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @ApiOperation(value = "Get list of Books author's firstname & lastname")
-    @GetMapping("/by-author")
-    public ResponseEntity<ApiResponse<List<BookDTO>>> getBooksByAuthorName(@RequestParam String firstName, @RequestParam String lastName) {
-        List<BookDTO> booksByAuthorName = bookService.getBooksByAuthorName(firstName, lastName);
-        return ResponseEntity.ok(new ApiResponse<>(booksByAuthorName));
+    @ApiOperation(value = "Get list of Books author's firstname, lastname or title")
+    @GetMapping("/filter")
+    public ResponseEntity<ApiResponse<List<BookDTO>>> filterBooks(@RequestParam Optional<String> firstName,
+                                                                  @RequestParam Optional<String> lastName,
+                                                                  @RequestParam Optional<String> title) {
+        BookFilterDTO dto = BookFilterDTO.builder()
+                .firstName(firstName.orElse(null))
+                .lastName(lastName.orElse(null))
+                .title(title.orElse(null))
+                .build();
+
+        List<BookDTO> filteredBooks = bookService.filterBooks(dto);
+        return ResponseEntity.ok(new ApiResponse<>(filteredBooks));
     }
 
     @ApiOperation(value = "Get Book by its ISBN number")

@@ -124,7 +124,7 @@ public class BookIntegrationTest {
 
 
         // WHEN & THEN
-        mockMvc.perform(get(BOOK_URL + "/by-author")
+        mockMvc.perform(get(BOOK_URL + "/filter")
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -142,7 +142,7 @@ public class BookIntegrationTest {
                 .andExpect(jsonPath("$.data[1].authorId").value(authorId));
 
 
-        mockMvc.perform(get(BOOK_URL + "/by-author")
+        mockMvc.perform(get(BOOK_URL + "/filter")
                         .param("firstName", firstName.toLowerCase())
                         .param("lastName", "")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -152,15 +152,14 @@ public class BookIntegrationTest {
                 .andExpect(jsonPath("$.data[0].isbn").value(bookDTO.getIsbn()))
                 .andExpect(jsonPath("$.data[0].publicationDate").value(bookDTO.getPublicationDate().toString()));
 
-        mockMvc.perform(get(BOOK_URL + "/by-author")
-                        .param("firstName", "")
-                        .param("lastName", lastName)
+        mockMvc.perform(get(BOOK_URL + "/filter")
+                        .param("title", "Summer Love")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].id").isNotEmpty())
-                .andExpect(jsonPath("$.data[0].title").value(bookDTO.getTitle()))
-                .andExpect(jsonPath("$.data[0].isbn").value(bookDTO.getIsbn()))
-                .andExpect(jsonPath("$.data[0].publicationDate").value(bookDTO.getPublicationDate().toString()));
+                .andExpect(jsonPath("$.data[0].id").value(6))
+                .andExpect(jsonPath("$.data[0].title").value(bookDTO2.getTitle()))
+                .andExpect(jsonPath("$.data[0].isbn").value(bookDTO2.getIsbn()))
+                .andExpect(jsonPath("$.data[0].publicationDate").value(bookDTO2.getPublicationDate().toString()));
     }
 
 

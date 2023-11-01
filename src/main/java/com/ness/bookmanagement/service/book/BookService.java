@@ -1,6 +1,7 @@
 package com.ness.bookmanagement.service.book;
 
 import com.ness.bookmanagement.dto.BookDTO;
+import com.ness.bookmanagement.dto.BookFilterDTO;
 
 import java.util.List;
 
@@ -45,9 +46,8 @@ public interface BookService {
     void deleteBook(Long id);
 
     /**
-     * @param firstName
-     * @param lastName
+     * @param bookFilterDTO
      * @return
      */
-    List<BookDTO> getBooksByAuthorName(String firstName, String lastName);
+    List<BookDTO> filterBooks(BookFilterDTO bookFilterDTO);
 }
