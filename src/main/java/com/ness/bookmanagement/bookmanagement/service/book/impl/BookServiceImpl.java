@@ -5,6 +5,8 @@ import com.ness.bookmanagement.bookmanagement.service.book.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 class BookServiceImpl implements BookService {
     private final CreateBookService createBookService;
@@ -29,8 +31,18 @@ class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<BookDTO> getAllBooks() {
+        return getBookService.getAllBooks();
+    }
+
+    @Override
     public BookDTO getBook(Long id) {
         return getBookService.getBook(id);
+    }
+
+    @Override
+    public BookDTO getBookByIsbn(String isbn) {
+        return getBookService.getBookByIsbn( isbn);
     }
 
     @Override
@@ -41,5 +53,10 @@ class BookServiceImpl implements BookService {
     @Override
     public void deleteBook(Long id) {
         deleteBookService.deleteBook(id);
+    }
+
+    @Override
+    public List<BookDTO> getBooksByAuthorName(String firstName, String lastName) {
+        return getBookService.getBooksByAuthorName(firstName, lastName);
     }
 }
