@@ -21,10 +21,6 @@ public class AuthorDTO {
     private LocalDate dateOfBirth;
     private String biography;
 
-    /**
-     * @param authorEntity
-     * @return
-     */
     public static AuthorDTO buildDTO(AuthorEntity authorEntity) {
         return AuthorDTO.builder()
                 .id(authorEntity.getId())
