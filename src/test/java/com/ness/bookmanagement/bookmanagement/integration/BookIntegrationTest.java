@@ -99,7 +99,7 @@ public class BookIntegrationTest {
     }
 
     @Test
-    public void testGetBookDTO_whenIsbn_thenAssertResponse() throws Exception {
+    public void testGetBookDTO_givenAuthorInfo_thenAssertResponse() throws Exception {
         // GIVEN
         final Long authorId = 2L;
 
@@ -161,5 +161,28 @@ public class BookIntegrationTest {
                 .andExpect(jsonPath("$.data[0].title").value(bookDTO.getTitle()))
                 .andExpect(jsonPath("$.data[0].isbn").value(bookDTO.getIsbn()))
                 .andExpect(jsonPath("$.data[0].publicationDate").value(bookDTO.getPublicationDate().toString()));
+    }
+
+
+    @Test
+    public void testGetBookDTO_whenIsbn_thenAssertResponse() throws Exception {
+//        final String isbn = "978-0345547976";
+
+        final BookDTO expectedDTO = BookDTO.builder()
+                .title("Summer Love")
+                .isbn("978-0345547976")
+                .publicationDate(LocalDate.parse("2019-06-30"))
+                .summary("A delightful summer romance that warms your heart.")
+                .authorId(2L)
+                .build();
+
+        mockMvc.perform(get(BOOK_URL + "/by-isbn")
+                        .param("isbn", expectedDTO.getIsbn()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.id").value(6))
+                .andExpect(jsonPath("$.data.title").value(expectedDTO.getTitle()))
+                .andExpect(jsonPath("$.data.isbn").value(expectedDTO.getIsbn()))
+                .andExpect(jsonPath("$.data.publicationDate").value(expectedDTO.getPublicationDate().toString()))
+                .andExpect(jsonPath("$.data.authorId").value(expectedDTO.getAuthorId()));
     }
 }
