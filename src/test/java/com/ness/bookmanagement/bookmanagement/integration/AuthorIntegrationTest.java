@@ -132,7 +132,7 @@ public class AuthorIntegrationTest {
 
         BookDTO bookDTO1 = BookDTO.builder()
                 .title("Sample Book")
-                .isbn("1111111111")
+                .isbn("4444444444")
                 .publicationDate(LocalDate.now())
                 .summary("This is a sample book.")
                 .authorId(createdAuthor.getId())
@@ -140,7 +140,7 @@ public class AuthorIntegrationTest {
 
         BookDTO bookDTO2 = BookDTO.builder()
                 .title("Sample Book 2")
-                .isbn("2222222222")
+                .isbn("5555555555")
                 .publicationDate(LocalDate.now())
                 .summary("This is a sample book 2.")
                 .authorId(createdAuthor.getId())
