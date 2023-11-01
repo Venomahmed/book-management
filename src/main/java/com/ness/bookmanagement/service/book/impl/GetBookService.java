@@ -5,7 +5,6 @@ import com.ness.bookmanagement.dto.BookDTO;
 import com.ness.bookmanagement.dto.BookFilterDTO;
 import com.ness.bookmanagement.entity.BookEntity;
 import com.ness.bookmanagement.exception.NotFoundException;
-import com.ness.bookmanagement.respository.AuthorEntityRepository;
 import com.ness.bookmanagement.respository.BookEntityRepository;
 import com.ness.bookmanagement.respository.BookEntityRepositoryImpl;
 import com.ness.bookmanagement.service.book.BookUtil;
@@ -20,14 +19,11 @@ class GetBookService {
 
     private final BookEntityRepository bookEntityRepository;
     private final BookEntityRepositoryImpl bookEntityRepositoryImpl;
-    private final AuthorEntityRepository authorEntityRepository;
 
     @Autowired
     GetBookService(BookEntityRepository bookEntityRepository,
-                   AuthorEntityRepository authorEntityRepository,
                    BookEntityRepositoryImpl bookEntityRepositoryImpl) {
         this.bookEntityRepository = bookEntityRepository;
-        this.authorEntityRepository = authorEntityRepository;
         this.bookEntityRepositoryImpl = bookEntityRepositoryImpl;
     }
 
