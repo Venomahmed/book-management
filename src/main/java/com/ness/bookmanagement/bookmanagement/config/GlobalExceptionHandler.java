@@ -2,6 +2,7 @@ package com.ness.bookmanagement.bookmanagement.config;
 
 import com.ness.bookmanagement.bookmanagement.dto.ApiError;
 import com.ness.bookmanagement.bookmanagement.dto.ApiResponse;
+import com.ness.bookmanagement.bookmanagement.exception.ActionFailedException;
 import com.ness.bookmanagement.bookmanagement.exception.ActionNotAllowedException;
 import com.ness.bookmanagement.bookmanagement.exception.BookManagementException;
 import com.ness.bookmanagement.bookmanagement.exception.NotFoundException;
@@ -21,17 +22,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleBookManagementException(BookManagementException ex) {
         log.error("Failure errorCode=" + ex.getErrorCode(), ex);
 
-        HttpStatus statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        HttpStatus statusCode;
 
         if (ex instanceof NotFoundException) {
             statusCode = HttpStatus.NOT_FOUND;
 
         } else if (ex instanceof ActionNotAllowedException) {
             statusCode = HttpStatus.NOT_ACCEPTABLE;
+
+        } else if (ex instanceof ActionFailedException) {
+            statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        } else {
+            statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        String errorMessage = ex.getMessage();
-        ApiError apiError = new ApiError(ex.getErrorCode(), errorMessage);
+        ApiError apiError = new ApiError(ex.getErrorCode(), ex.getMessage());
 
         return ResponseEntity
                 .status(statusCode)

@@ -1,19 +1,19 @@
 package com.ness.bookmanagement.bookmanagement.exception;
 
-public class ActionNotAllowedException extends BookManagementException {
+public class ActionFailedException extends BookManagementException {
     private final int errorCode;
 
-    public ActionNotAllowedException(int errorCode) {
+    public ActionFailedException(int errorCode) {
         super();
         this.errorCode = errorCode;
     }
 
-    public ActionNotAllowedException(String message, int errorCode) {
+    public ActionFailedException(String message, int errorCode) {
         super(message);
         this.errorCode = errorCode;
     }
 
-    public ActionNotAllowedException(String message, Throwable cause, int errorCode) {
+    public ActionFailedException(String message, Throwable cause, int errorCode) {
         super(message, cause);
         this.errorCode = errorCode;
     }
@@ -22,4 +22,5 @@ public class ActionNotAllowedException extends BookManagementException {
     public int getErrorCode() {
         return errorCode;
     }
+
 }
