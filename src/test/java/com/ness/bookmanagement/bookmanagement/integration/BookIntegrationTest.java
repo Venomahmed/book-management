@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 
@@ -23,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class BookControllerIntegrationTest {
+public class BookIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -72,7 +71,7 @@ public class BookControllerIntegrationTest {
 
         Integer newBookId = JsonPath.read(bookResponseAsString, "$.data.id");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/books/{id}", newBookId))
+        mockMvc.perform(get("/books/{id}", newBookId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(newBookId))
                 .andExpect(jsonPath("$.data.title").value("Sample Book"))
@@ -121,7 +120,7 @@ public class BookControllerIntegrationTest {
         mockMvc.perform(delete("/books/{id}", newBookId))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/books/{id}", newBookId))
+        mockMvc.perform(get("/books/{id}", newBookId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Book not found with ID: " + newBookId));
     }
