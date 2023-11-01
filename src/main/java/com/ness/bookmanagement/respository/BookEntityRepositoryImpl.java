@@ -24,27 +24,27 @@ public class BookEntityRepositoryImpl {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (title != null) {
+        if (title != null && !title.trim().isEmpty()) {
             predicates.add(criteriaBuilder.like(
                     criteriaBuilder.lower(root.get("title")),
                     "%" + title.toLowerCase() + "%")
             );
         }
 
-        if (firstName != null) {
+        if (firstName != null && !firstName.trim().isEmpty()) {
             predicates.add(criteriaBuilder.like(
                     criteriaBuilder.lower(root.get("authorEntity").get("firstName")),
                     "%" + firstName.toLowerCase() + "%")
             );
         }
 
-        if (lastName != null) {
+        if (lastName != null && !lastName.trim().isEmpty()) {
             predicates.add(criteriaBuilder.like(
                     criteriaBuilder.lower(root.get("authorEntity").get("lastName")),
                     "%" + lastName.toLowerCase() + "%")
             );
         }
-        
+
         query.select(root).where(predicates.toArray(new Predicate[0]));
         return entityManager.createQuery(query).getResultList();
     }
