@@ -2,6 +2,7 @@ package com.ness.bookmanagement.respository;
 
 import com.ness.bookmanagement.entity.BookEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -17,7 +18,11 @@ public class BookEntityRepositoryImpl {
     @Autowired
     private EntityManager entityManager;
 
-    public List<BookEntity> searchBooksByCriteria(String title, String firstName, String lastName) {
+    public List<BookEntity> searchBooksByCriteria(Pageable pageable,
+                                                  String title,
+                                                  String firstName,
+                                                  String lastName) {
+
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<BookEntity> query = criteriaBuilder.createQuery(BookEntity.class);
         Root<BookEntity> root = query.from(BookEntity.class);
@@ -45,7 +50,14 @@ public class BookEntityRepositoryImpl {
             );
         }
 
+        int offset = (pageable.getPageNumber() - 1) * pageable.getPageSize();
+        System.out.println("OFFSET: " + offset);
+
         query.select(root).where(predicates.toArray(new Predicate[0]));
-        return entityManager.createQuery(query).getResultList();
+        return entityManager
+                .createQuery(query)
+                .setMaxResults(pageable.getPageSize())
+                .setFirstResult(offset)
+                .getResultList();
     }
 }

@@ -7,6 +7,8 @@ import com.ness.bookmanagement.service.book.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,18 +58,23 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @ApiOperation(value = "Get list of Books author's firstname, lastname or title")
+    @ApiOperation(value = "Get list of Books author's firstname, lastname or title with pagination")
     @GetMapping("/filter")
-    public ResponseEntity<ApiResponse<List<BookDTO>>> filterBooks(@RequestParam Optional<String> firstName,
+    public ResponseEntity<ApiResponse<List<BookDTO>>> filterBooks(@RequestParam(defaultValue = "1") int page,
+                                                                  @RequestParam(defaultValue = "10") int size,
+                                                                  @RequestParam Optional<String> firstName,
                                                                   @RequestParam Optional<String> lastName,
                                                                   @RequestParam Optional<String> title) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
         BookFilterDTO dto = BookFilterDTO.builder()
                 .firstName(firstName.orElse(null))
                 .lastName(lastName.orElse(null))
                 .title(title.orElse(null))
                 .build();
 
-        List<BookDTO> filteredBooks = bookService.filterBooks(dto);
+        List<BookDTO> filteredBooks = bookService.filterBooks(pageable, dto);
         return ResponseEntity.ok(new ApiResponse<>(filteredBooks));
     }
 

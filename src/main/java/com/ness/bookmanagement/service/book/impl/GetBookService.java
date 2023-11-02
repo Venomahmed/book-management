@@ -9,6 +9,7 @@ import com.ness.bookmanagement.respository.BookEntityRepository;
 import com.ness.bookmanagement.respository.BookEntityRepositoryImpl;
 import com.ness.bookmanagement.service.book.BookUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,8 +50,9 @@ class GetBookService {
                 .collect(Collectors.toList());
     }
 
-    public List<BookDTO> filterBooks(BookFilterDTO bookFilterDTO) {
+    public List<BookDTO> filterBooks(Pageable pageable, BookFilterDTO bookFilterDTO) {
         List<BookEntity> bookEntities = bookEntityRepositoryImpl.searchBooksByCriteria(
+                pageable,
                 bookFilterDTO.getTitle(),
                 bookFilterDTO.getFirstName(),
                 bookFilterDTO.getLastName()

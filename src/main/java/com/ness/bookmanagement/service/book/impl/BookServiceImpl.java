@@ -4,6 +4,7 @@ import com.ness.bookmanagement.dto.BookDTO;
 import com.ness.bookmanagement.dto.BookFilterDTO;
 import com.ness.bookmanagement.service.book.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,7 +44,7 @@ class BookServiceImpl implements BookService {
 
     @Override
     public BookDTO getBookByIsbn(String isbn) {
-        return getBookService.getBookByIsbn( isbn);
+        return getBookService.getBookByIsbn(isbn);
     }
 
     @Override
@@ -57,7 +58,7 @@ class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDTO> filterBooks(BookFilterDTO bookFilterDTO) {
-        return getBookService.filterBooks(bookFilterDTO);
+    public List<BookDTO> filterBooks(Pageable pageable, BookFilterDTO bookFilterDTO) {
+        return getBookService.filterBooks(pageable, bookFilterDTO);
     }
 }

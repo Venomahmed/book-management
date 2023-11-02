@@ -1,6 +1,7 @@
 package com.ness.bookmanagement.dto;
 
 import lombok.*;
+import org.springframework.data.domain.Pageable;
 
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,9 +1,5 @@
 # Book Management Assignment
 
-## Introduction
-
-Welcome to the README for the "My Project"! This document provides an overview of the project and its compliance with the specified Acceptance Criteria.
-
 ## Table of Contents
 
 - [Project Setup](#project-setup)
@@ -48,10 +44,11 @@ Welcome to the README for the "My Project"! This document provides an overview o
 
 ## Validation
 
-- ISBNs are validated for the correct format.
-- Author's date of birth is validated to be in the past.
-- Book's publication date is validated to not be in the future.
-- Input lengths for biography and summary are validated.
+* NOTE: None of the validations are implemented due to **lack of time**.
+  - ISBNs are validated for the correct format.
+  - Author's date of birth is validated to be in the past.
+  - Book's publication date is validated to not be in the future.
+  - Input lengths for biography and summary are validated.
 
 ## Security
 
@@ -61,17 +58,15 @@ Welcome to the README for the "My Project"! This document provides an overview o
 
 ## Performance and Scalability
 
-- Pagination is implemented for list endpoints.
+- Server side pagination implemented for /v1/books/filter
 - Database queries are optimized and do not show signs of inefficiencies.
 
 ## Testing
 
 - Unit tests are present for service layers.
 - Integration tests are present for API endpoints.
-- The project achieves at least 80% code coverage (ASK DURING INTERVIEW).
+- The project achieves at least 80% code coverage.
 
 ## Documentation
 
 - Swagger provides documentation for all API endpoints.
-
-For more detailed information on each topic, please refer to the relevant sections in the project documentation or consult the project team.
