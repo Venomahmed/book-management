@@ -2,6 +2,7 @@ package com.ness.bookmanagement.service.book;
 
 import com.ness.bookmanagement.dto.BookDTO;
 import com.ness.bookmanagement.dto.BookFilterDTO;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -60,8 +61,9 @@ public interface BookService {
     /**
      * Filters books based on the specified criteria in the provided filter DTO.
      *
+     * @param pageable the page number & page size
      * @param bookFilterDTO The filter criteria to apply.
      * @return A list of book DTOs that match the filter criteria.
      */
-    List<BookDTO> filterBooks(BookFilterDTO bookFilterDTO);
+    List<BookDTO> filterBooks(Pageable pageable, BookFilterDTO bookFilterDTO);
 }
