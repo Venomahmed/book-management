@@ -58,7 +58,7 @@
 
 ## Performance and Scalability
 
-- Pagination is implemented for list endpoints.
+- Server side pagination implemented for /v1/books/filter
 - Database queries are optimized and do not show signs of inefficiencies.
 
 ## Testing
