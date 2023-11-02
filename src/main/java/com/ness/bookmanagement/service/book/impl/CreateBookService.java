@@ -7,6 +7,7 @@ import com.ness.bookmanagement.entity.BookEntity;
 import com.ness.bookmanagement.exception.ActionFailedException;
 import com.ness.bookmanagement.respository.AuthorEntityRepository;
 import com.ness.bookmanagement.respository.BookEntityRepository;
+import com.ness.bookmanagement.service.ValidationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,14 +17,17 @@ import static com.ness.bookmanagement.service.author.AuthorUtil.authorNotFoundEx
 @Slf4j
 @Service
 class CreateBookService {
-
     private final BookEntityRepository bookEntityRepository;
     private final AuthorEntityRepository authorEntityRepository;
+    private final ValidationService validationService;
 
     @Autowired
-    CreateBookService(BookEntityRepository bookEntityRepository, AuthorEntityRepository authorEntityRepository) {
+    CreateBookService(BookEntityRepository bookEntityRepository,
+                      AuthorEntityRepository authorEntityRepository,
+                      ValidationService validationService) {
         this.bookEntityRepository = bookEntityRepository;
         this.authorEntityRepository = authorEntityRepository;
+        this.validationService = validationService;
     }
 
     public BookDTO createBook(BookDTO bookDTO) {
@@ -31,6 +35,11 @@ class CreateBookService {
                 .orElseThrow(authorNotFoundException(bookDTO.getAuthorId()));
 
         try {
+            boolean isDateAfter = validationService.isDateAfter(bookDTO.getPublicationDate());
+            if (isDateAfter) {
+                throw new IllegalArgumentException("Book's publication date is not be in the future");
+            }
+
             BookEntity bookEntity = bookDTO.buildBookEntity();
             bookEntity.setId(null);
             bookEntity.setAuthorEntity(authorEntity);

@@ -6,6 +6,7 @@ import com.ness.bookmanagement.entity.AuthorEntity;
 import com.ness.bookmanagement.exception.ActionFailedException;
 import com.ness.bookmanagement.exception.NotFoundException;
 import com.ness.bookmanagement.respository.AuthorEntityRepository;
+import com.ness.bookmanagement.service.ValidationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,10 +26,12 @@ public class UpdateAuthorServiceTest {
     private UpdateAuthorService updateAuthorService;
     @Mock
     private AuthorEntityRepository authorEntityRepository;
+    @Mock
+    private ValidationService validationService;
 
     @BeforeEach
     void setUp() {
-        updateAuthorService = new UpdateAuthorService(authorEntityRepository);
+        updateAuthorService = new UpdateAuthorService(authorEntityRepository, validationService);
     }
 
     @Test
@@ -51,6 +54,7 @@ public class UpdateAuthorServiceTest {
 
         when(authorEntityRepository.findById(1L)).thenReturn(Optional.of(authorEntity));
         when(authorEntityRepository.save(authorEntity)).thenReturn(authorEntity);
+        when(validationService.isDateAfter(any(LocalDate.class))).thenReturn(false);
 
         // When
         AuthorDTO updatedAuthor = updateAuthorService.updateAuthor(1L, updatedAuthorDTO);

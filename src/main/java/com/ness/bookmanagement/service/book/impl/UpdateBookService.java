@@ -6,6 +6,7 @@ import com.ness.bookmanagement.entity.BookEntity;
 import com.ness.bookmanagement.exception.ActionFailedException;
 import com.ness.bookmanagement.exception.ActionNotAllowedException;
 import com.ness.bookmanagement.respository.BookEntityRepository;
+import com.ness.bookmanagement.service.ValidationService;
 import com.ness.bookmanagement.service.book.BookUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,12 @@ import java.util.Objects;
 @Service
 class UpdateBookService {
     private final BookEntityRepository bookEntityRepository;
+    private final ValidationService validationService;
 
     @Autowired
-    UpdateBookService(BookEntityRepository bookEntityRepository) {
+    UpdateBookService(BookEntityRepository bookEntityRepository, ValidationService validationService) {
         this.bookEntityRepository = bookEntityRepository;
+        this.validationService = validationService;
     }
 
     public BookDTO updateBook(Long bookId, BookDTO updatedBookDTO) {
@@ -36,6 +39,11 @@ class UpdateBookService {
         }
 
         try {
+            boolean isDateAfter = validationService.isDateAfter(updatedBookDTO.getPublicationDate());
+            if (isDateAfter) {
+                throw new IllegalArgumentException("Book's publication date is not be in the future");
+            }
+
             existingBookEntity.setSummary(updatedBookDTO.getSummary());
             existingBookEntity.setTitle(updatedBookDTO.getTitle());
             existingBookEntity.setIsbn(updatedBookDTO.getIsbn());

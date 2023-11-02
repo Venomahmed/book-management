@@ -5,6 +5,7 @@ import com.ness.bookmanagement.dto.AuthorDTO;
 import com.ness.bookmanagement.entity.AuthorEntity;
 import com.ness.bookmanagement.exception.ActionFailedException;
 import com.ness.bookmanagement.respository.AuthorEntityRepository;
+import com.ness.bookmanagement.service.ValidationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,12 @@ import static com.ness.bookmanagement.service.author.AuthorUtil.authorNotFoundEx
 @Service
 class UpdateAuthorService {
     private final AuthorEntityRepository authorEntityRepository;
+    private final ValidationService validationService;
 
     @Autowired
-    UpdateAuthorService(AuthorEntityRepository authorEntityRepository) {
+    UpdateAuthorService(AuthorEntityRepository authorEntityRepository, ValidationService validationService) {
         this.authorEntityRepository = authorEntityRepository;
+        this.validationService = validationService;
     }
 
     public AuthorDTO updateAuthor(Long id, AuthorDTO updatedAuthorDTO) {
@@ -26,6 +29,11 @@ class UpdateAuthorService {
                 .orElseThrow(authorNotFoundException(id));
 
         try {
+            boolean isDobAfter = validationService.isDateAfter(updatedAuthorDTO.getDateOfBirth());
+            if (isDobAfter) {
+                throw new IllegalArgumentException("Author's date of birth is to be in the past");
+            }
+
             authorEntity.setFirstName(updatedAuthorDTO.getFirstName());
             authorEntity.setLastName(updatedAuthorDTO.getLastName());
             authorEntity.setDateOfBirth(updatedAuthorDTO.getDateOfBirth());

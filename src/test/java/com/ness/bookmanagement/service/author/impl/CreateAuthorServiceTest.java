@@ -5,6 +5,7 @@ import com.ness.bookmanagement.dto.AuthorDTO;
 import com.ness.bookmanagement.entity.AuthorEntity;
 import com.ness.bookmanagement.exception.ActionFailedException;
 import com.ness.bookmanagement.respository.AuthorEntityRepository;
+import com.ness.bookmanagement.service.ValidationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,12 +24,14 @@ import static org.mockito.Mockito.when;
 public class CreateAuthorServiceTest {
     @Mock
     private AuthorEntityRepository authorEntityRepository;
+    @Mock
+    private ValidationService validationService;
 
     private CreateAuthorService createAuthorService;
 
     @BeforeEach
     void setUp() {
-        createAuthorService = new CreateAuthorService(authorEntityRepository);
+        createAuthorService = new CreateAuthorService(authorEntityRepository, validationService);
     }
 
     @Test
@@ -44,6 +47,7 @@ public class CreateAuthorServiceTest {
         authorEntity.setId(1L);
 
         when(authorEntityRepository.save(any(AuthorEntity.class))).thenReturn(authorEntity);
+        when(validationService.isDateAfter(any(LocalDate.class))).thenReturn(false);
 
         AuthorDTO createdAuthor = createAuthorService.createAuthor(authorDTO);
 
