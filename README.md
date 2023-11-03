@@ -2,8 +2,9 @@
 
 ## Table of Contents
 
-- [Project Setup](#project-setup)
-- [Entities](#entities)
+- [JDK](#jdk)
+- [Swagger Details](#swagger-details)
+- [User Details](#user-details)
 - [API Endpoints](#api-endpoints)
 - [Database](#database)
 - [Error Handling](#error-handling)
@@ -13,16 +14,24 @@
 - [Testing](#testing)
 - [Documentation](#documentation)
 
-## Project Setup
+## JDK
 
-- The project follows the standard Maven structure.
-- The `pom.xml` correctly lists all dependencies.
-- The project builds and packages into a runnable JAR using `mvn clean package`.
+- openjdk version "17.0.9" 2023-10-17 LTS
+- OpenJDK Runtime Environment Corretto-17.0.9.8.1 (build 17.0.9+8-LTS)
+- OpenJDK 64-Bit Server VM Corretto-17.0.9.8.1 (build 17.0.9+8-LTS, mixed mode, sharing)
 
-## Entities
+## Swagger Details
 
-- Both Author and Book entities are defined with the specified attributes.
-- JPA annotations are correctly used for primary keys, relationships, and constraints.
+- URL: http://localhost:8080/swagger-ui/index.html#/
+
+## User Details
+
+- istiak/password
+- user1/pwd1
+- user2/pwd2
+- user3/pwd3
+
+Ingested manually using UserDetailsServiceImpl as hardcode object due to lack of time.
 
 ## API Endpoints
 
@@ -39,16 +48,11 @@
 
 ## Error Handling
 
-- Global exception handling is in place.
-- Specific exceptions return detailed error responses with the correct HTTP status codes.
+- Controller Advice for exception handling.
 
 ## Validation
 
-* NOTE: None of the validations are implemented due to **lack of time**.
-  - ISBNs are validated for the correct format.
-  - Author's date of birth is validated to be in the past.
-  - Book's publication date is validated to not be in the future.
-  - Input lengths for biography and summary are validated.
+* NOTE: Few of the validations are implemented due to **lack of time**.
 
 ## Security
 
@@ -66,7 +70,3 @@
 - Unit tests are present for service layers.
 - Integration tests are present for API endpoints.
 - The project achieves at least 80% code coverage.
-
-## Documentation
-
-- Swagger provides documentation for all API endpoints.
