@@ -3,6 +3,8 @@ package com.ness.bookmanagement.controller;
 import com.ness.bookmanagement.config.JwtUtil;
 import com.ness.bookmanagement.dto.AuthRequestDTO;
 import com.ness.bookmanagement.exception.UserNotAuthenticatedException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "Authorization Controller")
 @Slf4j
 @RestController
 public class AuthorizationController {
@@ -21,8 +24,9 @@ public class AuthorizationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @ApiOperation(value = "Generate Authentication Token")
     @PostMapping("/authenticate")
-    public ResponseEntity<String> generateToken(@RequestBody AuthRequestDTO authRequest) throws Exception {
+    public ResponseEntity<String> generateToken(@RequestBody AuthRequestDTO authRequest) {
         try {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     authRequest.getUserName(),

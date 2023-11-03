@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Service
 public class JwtUtil {
     private static final String SECRET = "MySECRET@2023";
-    private static final Integer ONE_HOUR = 60 * 60;
+    private static final Integer ONE_HOUR = 60 * 60 * 10;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

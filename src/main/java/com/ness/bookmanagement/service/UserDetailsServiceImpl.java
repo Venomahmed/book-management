@@ -28,7 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
                 User.builder()
                         .username("user1")
-                        .password("pwd1")
+                            .password("pwd1")
                         .authorities(new ArrayList<>())
                         .build(),
 

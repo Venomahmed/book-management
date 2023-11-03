@@ -18,6 +18,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class WebSecurity extends WebSecurityConfigurerAdapter {
+    private final String[] SWAGGER_ENDPOINTS = new String[]{
+            "/v2/api-docs",
+            "/configuration/ui",
+            "/swagger-resources",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-resources/configuration/ui",
+            "/swagger-resources/configuration/security"
+    };
+
+
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
@@ -43,6 +56,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
+                .antMatchers(SWAGGER_ENDPOINTS)
+                .permitAll()
                 .antMatchers("/authenticate")
                 .permitAll()
                 .anyRequest()
