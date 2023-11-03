@@ -69,7 +69,7 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>0.12.3</version>
+            <version>0.9.1</version>
         </dependency>
 
     </dependencies>
@@ -79,6 +79,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
+                <configuration>
+                    <mainClass>com.ness.bookmanagement.BookManagementApplication</mainClass>
+                </configuration>
             </plugin>
 
             <plugin>

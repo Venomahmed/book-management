@@ -1,10 +1,7 @@
 package com.ness.bookmanagement.config;
 
 import com.ness.bookmanagement.dto.ApiError;
-import com.ness.bookmanagement.exception.ActionFailedException;
-import com.ness.bookmanagement.exception.ActionNotAllowedException;
-import com.ness.bookmanagement.exception.BookManagementException;
-import com.ness.bookmanagement.exception.NotFoundException;
+import com.ness.bookmanagement.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +18,10 @@ public class GlobalExceptionHandler {
 
         HttpStatus statusCode;
 
-        if (ex instanceof NotFoundException) {
+        if (ex instanceof UserNotAuthenticatedException) {
+            statusCode = HttpStatus.UNAUTHORIZED;
+
+        } else if (ex instanceof NotFoundException) {
             statusCode = HttpStatus.NOT_FOUND;
 
         } else if (ex instanceof ActionNotAllowedException) {

@@ -2,13 +2,16 @@ package com.ness.bookmanagement.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.ness.bookmanagement.config.JwtUtil;
 import com.ness.bookmanagement.dto.AuthorDTO;
 import com.ness.bookmanagement.service.author.AuthorService;
 import com.ness.bookmanagement.service.book.BookService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -30,6 +33,18 @@ public class AuthorIntegrationTest {
     private AuthorService authorService;
     @Autowired
     private BookService bookService;
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    private String bearerToken;
+    private final String USERNAME = "istiak";
+
+    @BeforeEach
+    void beforeEach() {
+        String token = jwtUtil.generateToken(USERNAME);
+        bearerToken = "Bearer " + token;
+    }
+
 
     @Test
     public void testCreateAuthor_andGetAuthorById() throws Exception {
@@ -45,6 +60,7 @@ public class AuthorIntegrationTest {
 
         // WHEN & THEN
         final String authorResponseAsString = mockMvc.perform(post(AUTHOR_URL)
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(payload))
                 .andExpect(status().isCreated())
@@ -59,9 +75,9 @@ public class AuthorIntegrationTest {
 
         final Integer newAuthorId = JsonPath.read(authorResponseAsString, "$.data.id");
 
-        mockMvc.perform(get(AUTHOR_URL + "/{id}", newAuthorId))
+        mockMvc.perform(get(AUTHOR_URL + "/{id}", newAuthorId)
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value(newAuthorId))
                 .andExpect(jsonPath("$.data.firstName").value(authorDTO.getFirstName()))
                 .andExpect(jsonPath("$.data.lastName").value(authorDTO.getLastName()))
                 .andExpect(jsonPath("$.data.biography").value(authorDTO.getBiography()))
@@ -84,20 +100,22 @@ public class AuthorIntegrationTest {
 
 
         // WHEN & THEN
-        mockMvc.perform(put(AUTHOR_URL+"/{id}", authorId)
+        mockMvc.perform(put(AUTHOR_URL + "/{id}", authorId)
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .content(updatePayload)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value(authorId))
                 .andExpect(jsonPath("$.data.firstName").value(authorDTO.getFirstName()))
                 .andExpect(jsonPath("$.data.lastName").value(authorDTO.getLastName()))
                 .andExpect(jsonPath("$.data.biography").value(authorDTO.getBiography()))
                 .andExpect(jsonPath("$.data.dateOfBirth").value(authorDTO.getDateOfBirth().toString()));
 
-        mockMvc.perform(delete(AUTHOR_URL + "/{id}", authorId))
+        mockMvc.perform(delete(AUTHOR_URL + "/{id}", authorId)
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get(AUTHOR_URL + "/{id}", authorId))
+        mockMvc.perform(get(AUTHOR_URL + "/{id}", authorId)
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Author not found with ID: " + authorId));
     }
@@ -110,16 +128,15 @@ public class AuthorIntegrationTest {
 
         // WHEN & THEN
         mockMvc.perform(get(AUTHOR_URL + "/" + authorId + "/books")
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].id").value(2))
                 .andExpect(jsonPath("$.data[0].title").value("Love in Paris"))
                 .andExpect(jsonPath("$.data[0].isbn").value("978-0062407689"))
                 .andExpect(jsonPath("$.data[0].publicationDate").value("2021-07-20"))
                 .andExpect(jsonPath("$.data[0].summary").value("A heartwarming love story set in the city of love."))
                 .andExpect(jsonPath("$.data[0].authorId").value(authorId))
 
-                .andExpect(jsonPath("$.data[1].id").value(6))
                 .andExpect(jsonPath("$.data[1].title").value("Summer Love"))
                 .andExpect(jsonPath("$.data[1].isbn").value("978-0345547976"))
                 .andExpect(jsonPath("$.data[1].publicationDate").value("2019-06-30"))

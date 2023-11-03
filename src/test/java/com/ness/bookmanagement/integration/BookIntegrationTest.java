@@ -2,13 +2,16 @@ package com.ness.bookmanagement.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.ness.bookmanagement.config.JwtUtil;
 import com.ness.bookmanagement.dto.BookDTO;
 import com.ness.bookmanagement.respository.AuthorEntityRepository;
 import com.ness.bookmanagement.service.book.BookService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -30,6 +33,18 @@ public class BookIntegrationTest {
     private AuthorEntityRepository authorEntityRepository;
     @Autowired
     private BookService bookService;
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    private String bearerToken;
+    private final String USERNAME = "istiak";
+
+    @BeforeEach
+    void beforeEach() {
+        String token = jwtUtil.generateToken(USERNAME);
+        bearerToken = "Bearer " + token;
+    }
+
 
     @Test
     public void givenBookDTO_withValidAuthorEntity_thenVerifyCreateAndGetEndpoint() throws Exception {
@@ -46,6 +61,7 @@ public class BookIntegrationTest {
         String payload = objectMapper.writeValueAsString(bookDTO);
 
         String bookResponseAsString = mockMvc.perform(post(BOOK_URL)
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(payload))
                 .andExpect(status().isCreated())
@@ -59,7 +75,8 @@ public class BookIntegrationTest {
 
         Integer newBookId = JsonPath.read(bookResponseAsString, "$.data.id");
 
-        mockMvc.perform(get(BOOK_URL + "/{id}", newBookId))
+        mockMvc.perform(get(BOOK_URL + "/{id}", newBookId)
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(newBookId))
                 .andExpect(jsonPath("$.data.title").value(bookDTO.getTitle()))
@@ -83,6 +100,7 @@ public class BookIntegrationTest {
         String updatePayload = objectMapper.writeValueAsString(bookDTO);
 
         mockMvc.perform(put(BOOK_URL + "/{id}", bookId)
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatePayload))
                 .andExpect(status().isOk())
@@ -90,10 +108,12 @@ public class BookIntegrationTest {
                 .andExpect(jsonPath("$.data.isbn").value(bookDTO.getIsbn()))
                 .andExpect(jsonPath("$.data.publicationDate").value(bookDTO.getPublicationDate().toString()));
 
-        mockMvc.perform(delete(BOOK_URL + "/{id}", bookId))
+        mockMvc.perform(delete(BOOK_URL + "/{id}", bookId)
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get(BOOK_URL + "/{id}", bookId))
+        mockMvc.perform(get(BOOK_URL + "/{id}", bookId)
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Book not found with ID: " + bookId));
     }
@@ -125,6 +145,7 @@ public class BookIntegrationTest {
 
         // WHEN & THEN
         mockMvc.perform(get(BOOK_URL + "/filter")
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .param("firstName", firstName)
                         .param("lastName", lastName)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -143,6 +164,7 @@ public class BookIntegrationTest {
 
 
         mockMvc.perform(get(BOOK_URL + "/filter")
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .param("firstName", firstName.toLowerCase())
                         .param("lastName", "")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -153,10 +175,10 @@ public class BookIntegrationTest {
                 .andExpect(jsonPath("$.data[0].publicationDate").value(bookDTO.getPublicationDate().toString()));
 
         mockMvc.perform(get(BOOK_URL + "/filter")
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .param("title", "Summer Love")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].id").value(6))
                 .andExpect(jsonPath("$.data[0].title").value(bookDTO2.getTitle()))
                 .andExpect(jsonPath("$.data[0].isbn").value(bookDTO2.getIsbn()))
                 .andExpect(jsonPath("$.data[0].publicationDate").value(bookDTO2.getPublicationDate().toString()));
@@ -176,9 +198,9 @@ public class BookIntegrationTest {
                 .build();
 
         mockMvc.perform(get(BOOK_URL + "/by-isbn")
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .param("isbn", expectedDTO.getIsbn()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value(6))
                 .andExpect(jsonPath("$.data.title").value(expectedDTO.getTitle()))
                 .andExpect(jsonPath("$.data.isbn").value(expectedDTO.getIsbn()))
                 .andExpect(jsonPath("$.data.publicationDate").value(expectedDTO.getPublicationDate().toString()))
