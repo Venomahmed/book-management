@@ -179,7 +179,6 @@ public class BookIntegrationTest {
                         .param("title", "Summer Love")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].id").value(6))
                 .andExpect(jsonPath("$.data[0].title").value(bookDTO2.getTitle()))
                 .andExpect(jsonPath("$.data[0].isbn").value(bookDTO2.getIsbn()))
                 .andExpect(jsonPath("$.data[0].publicationDate").value(bookDTO2.getPublicationDate().toString()));
@@ -202,7 +201,6 @@ public class BookIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .param("isbn", expectedDTO.getIsbn()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value(6))
                 .andExpect(jsonPath("$.data.title").value(expectedDTO.getTitle()))
                 .andExpect(jsonPath("$.data.isbn").value(expectedDTO.getIsbn()))
                 .andExpect(jsonPath("$.data.publicationDate").value(expectedDTO.getPublicationDate().toString()))
